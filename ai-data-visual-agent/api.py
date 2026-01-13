@@ -29,16 +29,23 @@ def clean_for_json(obj):
 
 app = FastAPI()
 
+
 # ----------------------------
-# CORS
+# ✅ CORS (FIXED FOR VERCEL)
 # ----------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://ai-visualisation-software.vercel.app",
+        "https://ai-visualisation-software-*.vercel.app",
+        "https://ai-visualisation-software.onrender.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ----------------------------
 # ANALYZE ENDPOINT
