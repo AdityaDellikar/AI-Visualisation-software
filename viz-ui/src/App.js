@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import VegaChart from "./components/VegaChart";
 import ExcelUploader from "./components/ExcelUploader";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+/**
+ * ✅ Production-safe API base
+ * - Local dev → http://127.0.0.1:8000
+ * - Vercel → uses REACT_APP_API_BASE_URL
+ */
+const API_BASE =
+  process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
 
 function App() {
   const [charts, setCharts] = useState([]);
@@ -53,6 +59,10 @@ function App() {
         }),
       });
 
+      if (!res.ok) {
+        throw new Error(`Explain failed: ${res.status}`);
+      }
+
       const json = await res.json();
       setExplanation(json.explanation || "");
     } catch (err) {
@@ -67,12 +77,14 @@ function App() {
     <div style={{ padding: "40px", fontFamily: "sans-serif" }}>
       <h1>AI-Generated Visualizations</h1>
 
+      {/* Upload */}
       <ExcelUploader
         onStart={handleAnalyzeStart}
         onResult={handleResult}
         onError={handleAnalyzeError}
       />
 
+      {/* Insights */}
       {insights.length > 0 && (
         <div style={{ marginBottom: "30px" }}>
           <h2>Key Insights</h2>
@@ -84,6 +96,7 @@ function App() {
         </div>
       )}
 
+      {/* Charts */}
       <div
         style={{
           display: "grid",
@@ -96,13 +109,14 @@ function App() {
             key={spec.id || index}
             spec={{
               ...spec,
-              data: { values: dataRows },
+              data: { values: dataRows }, // ✅ inject data safely
             }}
             onPointClick={(value) => handleChartClick(value, spec)}
           />
         ))}
       </div>
 
+      {/* Explanation Panel */}
       {(isExplaining || explanation) && (
         <div
           style={{

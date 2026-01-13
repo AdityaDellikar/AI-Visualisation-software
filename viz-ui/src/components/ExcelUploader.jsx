@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+import { API_BASE_URL } from "../config";
 
 const ExcelUploader = ({ onStart, onResult, onError }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -12,19 +11,19 @@ const ExcelUploader = ({ onStart, onResult, onError }) => {
 
     setFileName(file.name);
     setIsUploading(true);
-    onStart?.(); // ✅ notify App that analysis started
+    onStart?.();
 
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${API_BASE}/analyze`, {
+      const response = await fetch(`${API_BASE_URL}/analyze`, {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("Analyze request failed");
+        throw new Error(`Analyze failed: ${response.status}`);
       }
 
       const json = await response.json();
@@ -32,7 +31,6 @@ const ExcelUploader = ({ onStart, onResult, onError }) => {
     } catch (err) {
       console.error("Upload failed:", err);
       onError?.();
-      alert("⚠️ Failed to analyze the Excel file.");
     } finally {
       setIsUploading(false);
     }
@@ -67,7 +65,7 @@ const ExcelUploader = ({ onStart, onResult, onError }) => {
 
       {isUploading && (
         <div style={{ marginTop: "10px", fontSize: "13px", color: "#666" }}>
-          ⏳ Uploading & analyzing dataset…
+          ⏳ Uploading & analyzing…
         </div>
       )}
     </div>
