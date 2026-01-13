@@ -16,9 +16,7 @@ An AI-powered full-stack application that analyzes datasets and automatically ge
 
 ## 🏗 Project Structure
 
-aiViz/
-├── ai-data-visual-agent/   # Backend (FastAPI + AI)
-└── viz-ui/                 # Frontend (React + Vega-Lite)
+aiViz/ 1. ai-data-visual-agent/   # Backend (FastAPI + AI) 2.viz-ui/                 # Frontend (React + Vega-Lite)
 
 ---
 
