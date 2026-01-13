@@ -50,7 +50,7 @@ async def analyze_excel(file: UploadFile = File(...)):
     contents = await file.read()
     df = pd.read_excel(io.BytesIO(contents))
 
-    # 🔥 Safe numeric coercion
+    # Safe numeric coercion
     for col in df.columns:
         try:
             converted = pd.to_numeric(df[col])
@@ -115,6 +115,4 @@ RULES (ABSOLUTE):
 
     raw_text = run_explainer(prompt)
 
-    return {
-        "explanation": raw_text.strip()
-    }
+    return {"explanation": raw_text.strip()}
